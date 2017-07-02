@@ -1,16 +1,16 @@
-import React, { Component } from 'react';
+// TODO: This is just a test HOC to work out how navigation works and to ensure
+// that redux is connecting to each view. Remove this later!
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import { ScrollView, Text, Button } from 'react-native';
 
-import { viewStyles } from '../../common/styles';
 import {
   IStore,
   IAboutView,
   INavigator,
   IAirConditionerSettings,
 } from '../../common/types';
-
-// Hook up to redux
-import { connect } from 'react-redux';
+import { viewStyles } from '../../common/styles';
 
 interface Props {
   navigator: INavigator;
@@ -18,7 +18,14 @@ interface Props {
   settings: IAirConditionerSettings;
 }
 
-class About extends Component<Props> {
+const mapStateToProps = (state: IStore) => ({
+  about: state.aboutView,
+  settings: state.airConditioner,
+});
+
+// HACK: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/9951
+@(connect(mapStateToProps) as any)
+export default class About extends PureComponent<Props> {
   public render () {
     return (
       <ScrollView style={ viewStyles.container }>
@@ -32,12 +39,3 @@ class About extends Component<Props> {
     this.props.navigator.pop();
   }
 }
-
-function mapStateToProps (state: IStore) {
-  return {
-    about: state.aboutView,
-    settings: state.airConditioner,
-  };
-}
-
-export default connect(mapStateToProps)(About);

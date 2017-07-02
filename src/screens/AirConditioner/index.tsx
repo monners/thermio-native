@@ -1,20 +1,24 @@
-import React, { Component } from 'react';
+import React, { PureComponent } from 'react';
+import { connect } from 'react-redux';
 import { ScrollView, Switch, TouchableHighlight } from 'react-native';
 
+import { IStore, INavigator, IAirConditionerSettings } from '../../common/types';
 import { viewStyles } from '../../common/styles';
-import { IStore, IAirConditionerSettings } from '../../common/types';
 
-// Hook up to redux
 import * as actions from './actions';
-import { connect } from 'react-redux';
 
-// Custom components and styles
 import Cell from '../../components/TableView/Cell';
 
-interface INavigator {
-  push: (params: any) => void;
-  pop: (params: any) => void;
-}
+// Connect to redux and return the relevant state to props
+const mapStateToProps = (state: IStore) => ({
+  settings: state.airConditioner,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  onPowerToggle: (value: boolean) => {
+    dispatch(actions.togglePower(value));
+  },
+});
 
 interface Props {
   navigator: INavigator;
@@ -22,7 +26,9 @@ interface Props {
   onPowerToggle: (value: boolean) => void;
 }
 
-class AirConditioner extends Component<Props> {
+// WORKAROUND: https://github.com/DefinitelyTyped/DefinitelyTyped/issues/9951
+@(connect(mapStateToProps, mapDispatchToProps) as any)
+export default class AirConditioner extends PureComponent<Props> {
   public render () {
     const { settings } = this.props;
     return (
@@ -46,20 +52,3 @@ class AirConditioner extends Component<Props> {
     });
   }
 }
-
-// Connect to redux and return the relevant state to props
-function mapStateToProps(state: IStore) {
-  return {
-    settings: state.airConditioner,
-  };
-}
-
-function mapDispatchToProps(dispatch) {
-  return {
-    onPowerToggle: (value: boolean) => {
-      dispatch(actions.togglePower(value));
-    },
-  };
-}
-
-export default connect(mapStateToProps, mapDispatchToProps)(AirConditioner);
