@@ -1,0 +1,59 @@
+{
+	"name": "thermio-native",
+	"version": "0.0.1",
+	"private": true,
+  "author": {
+    "name": "Jack Cuthbert",
+    "email": "jckcthbrt@gmail.com"
+  },
+  "license": "MIT",
+	"scripts": {
+		"start": "node node_modules/react-native/local-cli/cli.js start",
+		"test": "yarn run clean && yarn run build && jest",
+		"clean": "rimraf artifacts",
+		"build": "yarn run clean && yarn run tsc --",
+		"start:ios": "yarn run build && concurrently -r 'yarn run watch' 'react-native run-ios'",
+		"start:android": "npm run build && concurrently -r 'npm run watch' 'react-native run-android'",
+		"watch": "yarn run build -- -w",
+		"tsc": "tsc",
+		"lint": "tslint src/**/*.ts"
+	},
+	"dependencies": {
+		"react": "16.0.0-alpha.12",
+		"react-native": "0.45.1",
+		"react-native-navigation": "^1.1.126",
+		"react-redux": "^5.0.5",
+		"redux": "^3.7.1",
+		"redux-thunk": "^2.2.0"
+	},
+	"devDependencies": {
+		"@types/jest": "^20.0.2",
+		"@types/react": "^15.0.34",
+		"@types/react-native": "^0.44.15",
+		"@types/react-redux": "^4.4.45",
+		"@types/redux": "^3.6.0",
+		"babel-jest": "20.0.3",
+		"babel-preset-react-native": "2.0.0",
+		"concurrently": "^3.5.0",
+		"jest": "20.0.4",
+		"react-test-renderer": "16.0.0-alpha.12",
+		"redux-logger": "^3.0.6",
+		"rimraf": "^2.6.1",
+		"tslint": "^5.4.3",
+		"typescript": "^2.4.1"
+	},
+	"jest": {
+		"preset": "react-native",
+		"testRegex": "artifacts/.+\\.(test|spec).js$",
+		"coverageDirectory": "coverage",
+		"coverageReporters": [
+			"text-summary",
+			"html"
+		],
+		"collectCoverageFrom": [
+			"artifacts/**/*.js",
+			"!artifacts/**/*.spec.js",
+			"!artifacts/**/*.index.js"
+		]
+	}
+}
